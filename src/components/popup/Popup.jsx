@@ -33,10 +33,22 @@ export function Popup({ settings: { visible, content = {} }, setSettings }) {
       ? (document.body.style.overflow = 'hidden')
       : (document.body.style.overflow = '');
 
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && visible) {
+        setSettings((prevState) => ({
+          ...prevState,
+          visible: false
+        }));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [visible]);
+  }, [setSettings, visible]);
 
   return (
     <PopupContainer visible={visible} onClick={togglePopup}>
