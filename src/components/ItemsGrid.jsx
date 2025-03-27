@@ -20,15 +20,13 @@ export function ItemsGrid() {
     });
   }
 
-  if (!characters.length) {
-    return null;
-  }
+  if (!characters || !characters.length) return null;
 
   return (
     <Container>
-      {characters.map((props, index) => (
+      {characters.map((props) => (
         <Card
-          key={index}
+          key={props.id}
           onClickHandler={() => cardOnClickHandler(props)}
           {...props}
         />

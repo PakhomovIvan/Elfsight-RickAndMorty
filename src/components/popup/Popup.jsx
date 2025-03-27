@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { PopupEpisodes } from './PopupEpisodes';
 import { PopupHeader } from './PopupHeader';
@@ -27,8 +28,18 @@ export function Popup({ settings: { visible, content = {} }, setSettings }) {
     }));
   }
 
+  useEffect(() => {
+    visible
+      ? (document.body.style.overflow = 'hidden')
+      : (document.body.style.overflow = '');
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [visible]);
+
   return (
-    <PopupContainer visible={visible}>
+    <PopupContainer visible={visible} onClick={togglePopup}>
       <StyledPopup>
         <CloseIcon onClick={togglePopup} />
 
