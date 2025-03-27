@@ -1,6 +1,6 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import axios from 'axios';
 import { Loader, Text } from '../common';
 
 const API_EPISODES_URL = 'https://rickandmortyapi.com/api/episode';
@@ -26,7 +26,8 @@ export function PopupEpisodes({ episodes }) {
         } else {
           setSeries(data);
         }
-      });
+      })
+      .finally(() => setIsFetching(false));
   }, [episodes]);
 
   if (isFetching) {

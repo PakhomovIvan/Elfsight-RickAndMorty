@@ -11,26 +11,20 @@ export function DataProvider({ children }) {
   const [info, setInfo] = useState({});
   const [apiURL, setApiURL] = useState(API_URL);
 
-  const fetchData = async (url) => {
+  useEffect(() => {
     setIsFetching(true);
-    setIsError(false);
 
     axios
-      .get(url)
+      .get(apiURL)
       .then(({ data }) => {
-        setIsFetching(false);
         setCharacters(data.results);
         setInfo(data.info);
       })
       .catch((e) => {
-        setIsFetching(false);
         setIsError(true);
         console.error(e);
-      });
-  };
-
-  useEffect(() => {
-    fetchData(apiURL);
+      })
+      .finally(() => setIsFetching(false));
   }, [apiURL]);
 
   const dataValue = useMemo(
@@ -40,12 +34,11 @@ export function DataProvider({ children }) {
       apiURL,
       setApiURL,
       characters,
-      fetchData,
-      isFetching,
+      // isFetching,
       isError,
       info
     }),
-    [activePage, apiURL, characters, isFetching, isError, info, fetchData]
+    [activePage, apiURL, characters, /* isFetching, */ isError, info]
   );
 
   return (
