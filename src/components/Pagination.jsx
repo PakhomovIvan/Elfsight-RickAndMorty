@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { useData } from './providers';
 
 export function Pagination() {
@@ -22,7 +22,7 @@ export function Pagination() {
     });
 
     setPages(createdPages);
-  }, [info]);
+  }, [apiURL, info]);
 
   if (pages.length <= 1) return null;
 
