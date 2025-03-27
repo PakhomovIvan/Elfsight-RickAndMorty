@@ -13,7 +13,6 @@ export function DataProvider({ children }) {
 
   useEffect(() => {
     setIsFetching(true);
-
     axios
       .get(apiURL)
       .then(({ data }) => {
@@ -34,11 +33,11 @@ export function DataProvider({ children }) {
       apiURL,
       setApiURL,
       characters,
-      // isFetching,
+      isFetching,
       isError,
       info
     }),
-    [activePage, apiURL, characters, /* isFetching, */ isError, info]
+    [activePage, apiURL, characters, isFetching, isError, info]
   );
 
   return (
