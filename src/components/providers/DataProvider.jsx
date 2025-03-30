@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { getUniqueFilterValues } from '../../components/helpers/getUniqueFilterValues';
 
 const API_URL = 'https://rickandmortyapi.com/api/character/';
 
@@ -10,6 +11,13 @@ export function DataProvider({ children }) {
   const [isError, setIsError] = useState(false);
   const [info, setInfo] = useState({});
   const [apiURL, setApiURL] = useState(API_URL);
+  const [filters, setFilters] = useState({
+    status: [],
+    gender: [],
+    species: [],
+    name: [],
+    type: []
+  });
 
   useEffect(() => {
     setIsFetching(true);
@@ -26,6 +34,14 @@ export function DataProvider({ children }) {
       .finally(() => setIsFetching(false));
   }, [apiURL]);
 
+  useEffect(() => {
+    if (info.pages) {
+      getUniqueFilterValues(info.pages).then((dataCharactersAllFlat) =>
+        setFilters(dataCharactersAllFlat)
+      );
+    }
+  }, [info.pages]);
+
   const dataValue = useMemo(
     () => ({
       activePage,
@@ -34,10 +50,11 @@ export function DataProvider({ children }) {
       setApiURL,
       characters,
       isFetching,
+      filters,
       isError,
       info
     }),
-    [activePage, apiURL, characters, isFetching, isError, info]
+    [activePage, apiURL, characters, isFetching, isError, info, filters]
   );
 
   return (
