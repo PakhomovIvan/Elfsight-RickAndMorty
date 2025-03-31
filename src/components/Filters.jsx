@@ -245,10 +245,10 @@ const StyledSelect = styled.div`
     width: 100%;
     height: 40px;
     box-sizing: border-box;
-    border: 1px solid rgb(131, 191, 70);
+    border: 1px solid #83bf46;
     border-radius: 8px;
-    background: rgb(38, 55, 80);
-    color: rgb(179, 179, 179);
+    background: #263750;
+    color: #b3b3b3;
     text-align: left;
     padding: 10px;
     appearance: none;
@@ -317,7 +317,7 @@ const ClearButton = styled.span`
   top: 50%;
   transform: translateY(-50%);
   color: #f5f5f5;
-  padding: 5px;
+  background: #263750;
   font-size: 16px;
   cursor: pointer;
   padding: 0;
