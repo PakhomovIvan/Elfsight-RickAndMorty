@@ -31,23 +31,26 @@ export const Filters = () => {
     }
   }, [allFilters]);
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = useCallback((key, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [key]: value
     }));
-  };
+  }, []);
 
-  const handleClearFilter = (key) => {
-    handleFilterChange(key, '');
-  };
+  const handleClearFilter = useCallback(
+    (key) => {
+      handleFilterChange(key, '');
+    },
+    [handleFilterChange]
+  );
 
-  const toggleSelect = (key) => {
+  const toggleSelect = useCallback((key) => {
     setSelectOpen((prevState) => ({
       ...prevState,
       [key]: !prevState[key]
     }));
-  };
+  }, []);
 
   const handleApply = useCallback(() => {
     const params = {};
@@ -78,7 +81,7 @@ export const Filters = () => {
     }
   }, [searchParams, handleApply]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setFilters({
       status: '',
       gender: '',
@@ -94,19 +97,45 @@ export const Filters = () => {
       return url.toString();
     });
     setActivePage(0);
-  };
+  }, [setFilters, setSearchParams, setApiURL, setActivePage]);
+
+  const createHandleChange = useCallback(
+    (key) => (e) => {
+      handleFilterChange(key, e.target.value);
+    },
+    [handleFilterChange]
+  );
+
+  const createToggleSelect = useCallback(
+    (key) => () => {
+      toggleSelect(key);
+    },
+    [toggleSelect]
+  );
+
+  const createHandleBlur = useCallback(
+    (key) => () => {
+      setSelectOpen((prevState) => ({ ...prevState, [key]: false }));
+    },
+    [setSelectOpen]
+  );
+
+  const createHandleClearFilter = useCallback(
+    (key) => () => {
+      handleClearFilter(key);
+    },
+    [handleClearFilter]
+  );
 
   return (
     <Container>
       <StyledSelect>
         <select
           value={filters.status}
-          onChange={(e) => handleFilterChange('status', e.target.value)}
+          onChange={createHandleChange('status')}
           disabled={isDataFiltersLoading}
-          onClick={() => toggleSelect('status')}
-          onBlur={() =>
-            setSelectOpen((prevState) => ({ ...prevState, status: false }))
-          }
+          onClick={createToggleSelect('status')}
+          onBlur={createHandleBlur('status')}
         >
           <option value="" disabled hidden>
             Status
@@ -119,7 +148,7 @@ export const Filters = () => {
         </select>
         <ArrowIcon isOpen={selectOpen.status} />
         {filters.status && (
-          <ClearButton onClick={() => handleClearFilter('status')}>
+          <ClearButton onClick={createHandleClearFilter('status')}>
             &times;
           </ClearButton>
         )}
@@ -127,12 +156,10 @@ export const Filters = () => {
       <StyledSelect>
         <select
           value={filters.gender}
-          onChange={(e) => handleFilterChange('gender', e.target.value)}
+          onChange={createHandleChange('gender')}
           disabled={isDataFiltersLoading}
-          onClick={() => toggleSelect('gender')}
-          onBlur={() =>
-            setSelectOpen((prevState) => ({ ...prevState, gender: false }))
-          }
+          onClick={createToggleSelect('gender')}
+          onBlur={createHandleBlur('gender')}
         >
           <option value="" disabled hidden>
             Gender
@@ -145,7 +172,7 @@ export const Filters = () => {
         </select>
         <ArrowIcon isOpen={selectOpen.gender} />
         {filters.gender && (
-          <ClearButton onClick={() => handleClearFilter('gender')}>
+          <ClearButton onClick={createHandleClearFilter('gender')}>
             &times;
           </ClearButton>
         )}
@@ -153,12 +180,10 @@ export const Filters = () => {
       <StyledSelect>
         <select
           value={filters.species}
-          onChange={(e) => handleFilterChange('species', e.target.value)}
+          onChange={createHandleChange('species')}
           disabled={isDataFiltersLoading}
-          onClick={() => toggleSelect('species')}
-          onBlur={() =>
-            setSelectOpen((prevState) => ({ ...prevState, species: false }))
-          }
+          onClick={createToggleSelect('species')}
+          onBlur={createHandleBlur('species')}
         >
           <option value="" disabled hidden>
             Species
@@ -171,7 +196,7 @@ export const Filters = () => {
         </select>
         <ArrowIcon isOpen={selectOpen.species} />
         {filters.species && (
-          <ClearButton onClick={() => handleClearFilter('species')}>
+          <ClearButton onClick={createHandleClearFilter('species')}>
             &times;
           </ClearButton>
         )}
@@ -183,10 +208,10 @@ export const Filters = () => {
           autoComplete="off"
           placeholder="Name"
           value={filters.name}
-          onChange={(e) => handleFilterChange('name', e.target.value)}
+          onChange={createHandleChange('name')}
         />
         {filters.name && (
-          <ClearButton onClick={() => handleClearFilter('name')}>
+          <ClearButton onClick={createHandleClearFilter('name')}>
             &times;
           </ClearButton>
         )}
@@ -198,10 +223,10 @@ export const Filters = () => {
           autoComplete="off"
           placeholder="Type"
           value={filters.type}
-          onChange={(e) => handleFilterChange('type', e.target.value)}
+          onChange={createHandleChange('type')}
         />
         {filters.type && (
-          <ClearButton onClick={() => handleClearFilter('type')}>
+          <ClearButton onClick={createHandleClearFilter('type')}>
             &times;
           </ClearButton>
         )}
@@ -256,6 +281,10 @@ const StyledSelect = styled.div`
     appearance: none;
   }
 
+  select {
+    cursor: pointer;
+  }
+
   & select:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -268,7 +297,6 @@ const StyledSelect = styled.div`
     border-radius: 8px;
     background: rgba(255, 255, 255, 0);
     color: #83bf46;
-    font-family: Inter;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
