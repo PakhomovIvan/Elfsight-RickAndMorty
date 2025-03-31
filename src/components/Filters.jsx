@@ -14,6 +14,11 @@ export const Filters = () => {
     name: searchParams.get('name') || '',
     type: searchParams.get('type') || ''
   });
+  const [selectOpen, setSelectOpen] = useState({
+    status: false,
+    gender: false,
+    species: false
+  });
   const isFirstRender = useRef(true);
 
   useEffect(() => {
@@ -30,6 +35,17 @@ export const Filters = () => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [key]: value
+    }));
+  };
+
+  const handleClearFilter = (key) => {
+    handleFilterChange(key, '');
+  };
+
+  const toggleSelect = (key) => {
+    setSelectOpen((prevState) => ({
+      ...prevState,
+      [key]: !prevState[key]
     }));
   };
 
@@ -87,6 +103,10 @@ export const Filters = () => {
           value={filters.status}
           onChange={(e) => handleFilterChange('status', e.target.value)}
           disabled={isDataFiltersLoading}
+          onClick={() => toggleSelect('status')}
+          onBlur={() =>
+            setSelectOpen((prevState) => ({ ...prevState, status: false }))
+          }
         >
           <option value="" disabled hidden>
             Status
@@ -97,12 +117,22 @@ export const Filters = () => {
             </option>
           ))}
         </select>
+        <ArrowIcon isOpen={selectOpen.status} />
+        {filters.status && (
+          <ClearButton onClick={() => handleClearFilter('status')}>
+            &times;
+          </ClearButton>
+        )}
       </StyledSelect>
       <StyledSelect>
         <select
           value={filters.gender}
           onChange={(e) => handleFilterChange('gender', e.target.value)}
           disabled={isDataFiltersLoading}
+          onClick={() => toggleSelect('gender')}
+          onBlur={() =>
+            setSelectOpen((prevState) => ({ ...prevState, gender: false }))
+          }
         >
           <option value="" disabled hidden>
             Gender
@@ -113,12 +143,22 @@ export const Filters = () => {
             </option>
           ))}
         </select>
+        <ArrowIcon isOpen={selectOpen.gender} />
+        {filters.gender && (
+          <ClearButton onClick={() => handleClearFilter('gender')}>
+            &times;
+          </ClearButton>
+        )}
       </StyledSelect>
       <StyledSelect>
         <select
           value={filters.species}
           onChange={(e) => handleFilterChange('species', e.target.value)}
           disabled={isDataFiltersLoading}
+          onClick={() => toggleSelect('species')}
+          onBlur={() =>
+            setSelectOpen((prevState) => ({ ...prevState, species: false }))
+          }
         >
           <option value="" disabled hidden>
             Species
@@ -129,26 +169,40 @@ export const Filters = () => {
             </option>
           ))}
         </select>
+        <ArrowIcon isOpen={selectOpen.species} />
+        {filters.species && (
+          <ClearButton onClick={() => handleClearFilter('species')}>
+            &times;
+          </ClearButton>
+        )}
       </StyledSelect>
       <StyledSelect>
         <input
-          type="search"
           name="name"
           id="search-name"
           placeholder="Name"
           value={filters.name}
           onChange={(e) => handleFilterChange('name', e.target.value)}
         />
+        {filters.name && (
+          <ClearButton onClick={() => handleClearFilter('name')}>
+            &times;
+          </ClearButton>
+        )}
       </StyledSelect>
       <StyledSelect>
         <input
-          type="search"
           name="type"
           id="search-type"
           placeholder="Type"
           value={filters.type}
           onChange={(e) => handleFilterChange('type', e.target.value)}
         />
+        {filters.type && (
+          <ClearButton onClick={() => handleClearFilter('type')}>
+            &times;
+          </ClearButton>
+        )}
       </StyledSelect>
       <StyledSelect>
         <button onClick={handleApply} disabled={isDataFiltersLoading}>
@@ -183,6 +237,9 @@ const Container = styled.div`
 `;
 
 const StyledSelect = styled.div`
+  width: 100%;
+  position: relative;
+
   & select,
   input {
     width: 100%;
@@ -194,6 +251,7 @@ const StyledSelect = styled.div`
     color: rgb(179, 179, 179);
     text-align: left;
     padding: 10px;
+    appearance: none;
   }
 
   & select:disabled {
@@ -251,8 +309,37 @@ const StyledSelect = styled.div`
       gap: 10px;
     }
   }
+`;
 
-  option:hover {
-    background-color: #83bf4633;
+const ClearButton = styled.span`
+  position: absolute;
+  right: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #f5f5f5;
+  padding: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  z-index: 2;
+
+  &:hover {
+    color: #83bf46;
   }
+`;
+
+const ArrowIcon = styled.span`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: ${(props) => (props.isOpen ? '0px' : '5px')} solid #fff;
+  border-bottom: ${(props) => (props.isOpen ? '5px' : '0px')} solid #fff;
+  pointer-events: none;
 `;
