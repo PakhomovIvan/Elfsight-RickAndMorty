@@ -180,6 +180,7 @@ export const Filters = () => {
         <input
           name="name"
           id="search-name"
+          autoComplete="off"
           placeholder="Name"
           value={filters.name}
           onChange={(e) => handleFilterChange('name', e.target.value)}
@@ -194,6 +195,7 @@ export const Filters = () => {
         <input
           name="type"
           id="search-type"
+          autoComplete="off"
           placeholder="Type"
           value={filters.type}
           onChange={(e) => handleFilterChange('type', e.target.value)}
