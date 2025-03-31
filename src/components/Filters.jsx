@@ -1,47 +1,126 @@
 import { useEffect, useState } from 'react';
-import Select from 'react-select';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useData } from './providers';
 
 export const Filters = () => {
-  const { filters } = useData();
+  const { allFilters, setApiURL, setActivePage } = useData();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isDataFiltersLoading, setIsDataFiltersLoading] = useState(true);
+  const [status, setStatus] = useState(searchParams.get('status') || '');
+  const [gender, setGender] = useState(searchParams.get('gender') || '');
+  const [species, setSpecies] = useState(searchParams.get('species') || '');
+  const [name, setName] = useState(searchParams.get('name') || '');
+  const [type, setType] = useState(searchParams.get('type') || '');
 
   useEffect(() => {
     if (
-      filters.gender.length ||
-      filters.status.length ||
-      filters.species.length
-    )
+      allFilters.gender.length ||
+      allFilters.status.length ||
+      allFilters.species.length
+    ) {
       setIsDataFiltersLoading(false);
-  }, [filters]);
+    }
+  }, [allFilters]);
+
+  const handleApply = () => {
+    const params = {};
+    if (status) params.status = status;
+    if (gender) params.gender = gender;
+    if (species) params.species = species;
+    if (name) params.name = name;
+    if (type) params.type = type;
+
+    setSearchParams(params, { replace: true });
+
+    setApiURL((prevURL) => {
+      const url = new URL(prevURL);
+      const params = new URLSearchParams();
+      if (status) params.set('status', status);
+      if (gender) params.set('gender', gender);
+      if (species) params.set('species', species);
+      if (name) params.set('name', name);
+      if (type) params.set('type', type);
+      url.search = params.toString();
+
+      console.log(url.toString());
+
+      return url.toString();
+    });
+    setActivePage(0);
+  };
+
+  const handleReset = () => {
+    setStatus('');
+    setGender('');
+    setSpecies('');
+    setName('');
+    setType('');
+    setSearchParams({}, { replace: true });
+    setApiURL((prevURL) => {
+      const url = new URL(prevURL);
+      url.search = '';
+
+      return url.toString();
+    });
+    setActivePage(0);
+  };
 
   return (
     <Container>
       <StyledSelect>
-        <Select
-          options={filters.status}
-          isLoading={isDataFiltersLoading}
-          placeholder="Status"
-          onChange={(e) => console.log(e.value)}
-          maxMenuHeight={180}
-        />
+        <select
+          value={status}
+          onChange={(e) => {
+            setStatus(e.target.value);
+          }}
+          disabled={isDataFiltersLoading}
+        >
+          <option value="" disabled hidden>
+            Status
+          </option>
+          {allFilters.status.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </StyledSelect>
       <StyledSelect>
-        <Select
-          options={filters.gender}
-          placeholder="Gender"
-          isLoading={isDataFiltersLoading}
-          maxMenuHeight={180}
-        />
+        <select
+          value={gender}
+          onChange={(e) => {
+            setGender(e.target.value);
+          }}
+          disabled={isDataFiltersLoading}
+        >
+          <option value="" disabled hidden>
+            Gender
+          </option>
+          {allFilters.gender.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </StyledSelect>
       <StyledSelect>
-        <Select
-          options={filters.species}
-          placeholder="Species"
-          isLoading={isDataFiltersLoading}
-          maxMenuHeight={180}
-        />
+        <select
+          value={species}
+          onChange={(e) => {
+            setSpecies(e.target.value);
+          }}
+          disabled={isDataFiltersLoading}
+        >
+          <option value="" disabled hidden>
+            Species
+          </option>
+          {allFilters.species.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </StyledSelect>
       <StyledSelect>
         <input
@@ -49,7 +128,10 @@ export const Filters = () => {
           name="name"
           id="search-name"
           placeholder="Name"
-          onChange={(e) => console.log('Name: ', e.target.value)}
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
         />
       </StyledSelect>
       <StyledSelect>
@@ -58,12 +140,17 @@ export const Filters = () => {
           name="type"
           id="search-type"
           placeholder="Type"
-          onChange={(e) => console.log('Type: ', e.target.value)}
+          value={type}
+          onChange={(e) => {
+            setType(e.target.value);
+          }}
         />
       </StyledSelect>
       <StyledSelect>
-        <button onClick={() => console.log('Apply')}>Apply</button>
-        <button onClick={() => console.log('Reset')}>Reset</button>
+        <button onClick={handleApply} disabled={isDataFiltersLoading}>
+          Apply
+        </button>
+        <button onClick={handleReset}>Reset</button>
       </StyledSelect>
     </Container>
   );
@@ -87,12 +174,11 @@ const Container = styled.div`
   @media (max-width: 500px) {
     grid-template-columns: 240px;
     gap: 15px;
+    align-self: center;
   }
 `;
 
 const StyledSelect = styled.div`
-  // max-width: 180px;
-
   & select,
   input {
     width: 100%;
@@ -106,6 +192,11 @@ const StyledSelect = styled.div`
     padding: 10px;
   }
 
+  & select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   & button {
     width: 85px;
     height: 40px;
@@ -115,7 +206,6 @@ const StyledSelect = styled.div`
     color: #83bf46;
     font-family: Inter;
     font-size: 16px;
-
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 
@@ -129,6 +219,10 @@ const StyledSelect = styled.div`
       border-color: #ff5152;
       color: #ff5152;
 
+      @media (max-width: 500px) {
+        margin-left: 0;
+      }
+
       &:hover {
         background-color: #ff5152;
         color: #f5f5f5;
@@ -137,6 +231,20 @@ const StyledSelect = styled.div`
 
     @media (max-width: 1100px) {
       width: 70px;
+    }
+
+    @media (max-width: 500px) {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }
+
+  &:last-child {
+    @media (max-width: 500px) {
+      display: flex;
+      margin: 0;
+      flex-direction: column;
+      gap: 10px;
     }
   }
 `;

@@ -1,21 +1,26 @@
+import { BrowserRouter as Router } from 'react-router-dom';
 import styled from 'styled-components';
+import { axiosInterceptors } from './Api/axios/AxiosInterceptors';
 import { AppState, Header, ItemsGrid, Pagination, useData } from './components';
 
 function App() {
   const { isFetching, isError } = useData();
+  axiosInterceptors();
 
   return (
-    <Main>
-      <Header />
-      <AppState />
+    <Router>
+      <Main>
+        <Header />
+        <AppState />
 
-      {!isFetching && !isError && (
-        <>
-          <ItemsGrid />
-          <Pagination />
-        </>
-      )}
-    </Main>
+        {!isFetching && !isError && (
+          <>
+            <ItemsGrid />
+            <Pagination />
+          </>
+        )}
+      </Main>
+    </Router>
   );
 }
 

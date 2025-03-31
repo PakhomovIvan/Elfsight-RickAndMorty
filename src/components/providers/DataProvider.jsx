@@ -11,7 +11,7 @@ export function DataProvider({ children }) {
   const [isError, setIsError] = useState(false);
   const [info, setInfo] = useState({});
   const [apiURL, setApiURL] = useState(API_URL);
-  const [filters, setFilters] = useState({
+  const [allFilters, setAllFilters] = useState({
     status: [],
     gender: [],
     species: [],
@@ -37,7 +37,7 @@ export function DataProvider({ children }) {
   useEffect(() => {
     if (info.pages) {
       getUniqueFilterValues(info.pages).then((dataCharactersAllFlat) =>
-        setFilters(dataCharactersAllFlat)
+        setAllFilters(dataCharactersAllFlat)
       );
     }
   }, [info.pages]);
@@ -50,11 +50,11 @@ export function DataProvider({ children }) {
       setApiURL,
       characters,
       isFetching,
-      filters,
+      allFilters,
       isError,
       info
     }),
-    [activePage, apiURL, characters, isFetching, isError, info, filters]
+    [activePage, apiURL, characters, isFetching, isError, info, allFilters]
   );
 
   return (

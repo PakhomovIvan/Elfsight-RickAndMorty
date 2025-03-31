@@ -12,7 +12,6 @@ export const getUniqueFilterValues = async (numberOfPages) => {
   try {
     const dataCharactersAll = await Promise.all(promises);
     const dataCharactersAllFlat = dataCharactersAll.flat();
-
     const uniqueFilters = {
       status: [...new Set(dataCharactersAllFlat.map((item) => item.status))]
         .sort()
