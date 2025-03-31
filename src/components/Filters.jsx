@@ -7,11 +7,13 @@ export const Filters = () => {
   const { allFilters, setApiURL, setActivePage } = useData();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isDataFiltersLoading, setIsDataFiltersLoading] = useState(true);
-  const [status, setStatus] = useState(searchParams.get('status') || '');
-  const [gender, setGender] = useState(searchParams.get('gender') || '');
-  const [species, setSpecies] = useState(searchParams.get('species') || '');
-  const [name, setName] = useState(searchParams.get('name') || '');
-  const [type, setType] = useState(searchParams.get('type') || '');
+  const [filters, setFilters] = useState({
+    status: searchParams.get('status') || '',
+    gender: searchParams.get('gender') || '',
+    species: searchParams.get('species') || '',
+    name: searchParams.get('name') || '',
+    type: searchParams.get('type') || ''
+  });
 
   useEffect(() => {
     if (
@@ -23,39 +25,43 @@ export const Filters = () => {
     }
   }, [allFilters]);
 
+  const handleFilterChange = (key, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [key]: value
+    }));
+  };
+
   const handleApply = () => {
     const params = {};
-    if (status) params.status = status;
-    if (gender) params.gender = gender;
-    if (species) params.species = species;
-    if (name) params.name = name;
-    if (type) params.type = type;
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) params[key] = value;
+    });
 
     setSearchParams(params, { replace: true });
 
     setApiURL((prevURL) => {
       const url = new URL(prevURL);
       const params = new URLSearchParams();
-      if (status) params.set('status', status);
-      if (gender) params.set('gender', gender);
-      if (species) params.set('species', species);
-      if (name) params.set('name', name);
-      if (type) params.set('type', type);
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.set(key, value);
+      });
       url.search = params.toString();
-
-      console.log(url.toString());
 
       return url.toString();
     });
+
     setActivePage(0);
   };
 
   const handleReset = () => {
-    setStatus('');
-    setGender('');
-    setSpecies('');
-    setName('');
-    setType('');
+    setFilters({
+      status: '',
+      gender: '',
+      species: '',
+      name: '',
+      type: ''
+    });
     setSearchParams({}, { replace: true });
     setApiURL((prevURL) => {
       const url = new URL(prevURL);
@@ -70,10 +76,8 @@ export const Filters = () => {
     <Container>
       <StyledSelect>
         <select
-          value={status}
-          onChange={(e) => {
-            setStatus(e.target.value);
-          }}
+          value={filters.status}
+          onChange={(e) => handleFilterChange('status', e.target.value)}
           disabled={isDataFiltersLoading}
         >
           <option value="" disabled hidden>
@@ -88,10 +92,8 @@ export const Filters = () => {
       </StyledSelect>
       <StyledSelect>
         <select
-          value={gender}
-          onChange={(e) => {
-            setGender(e.target.value);
-          }}
+          value={filters.gender}
+          onChange={(e) => handleFilterChange('gender', e.target.value)}
           disabled={isDataFiltersLoading}
         >
           <option value="" disabled hidden>
@@ -106,10 +108,8 @@ export const Filters = () => {
       </StyledSelect>
       <StyledSelect>
         <select
-          value={species}
-          onChange={(e) => {
-            setSpecies(e.target.value);
-          }}
+          value={filters.species}
+          onChange={(e) => handleFilterChange('species', e.target.value)}
           disabled={isDataFiltersLoading}
         >
           <option value="" disabled hidden>
@@ -128,10 +128,8 @@ export const Filters = () => {
           name="name"
           id="search-name"
           placeholder="Name"
-          value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
+          value={filters.name}
+          onChange={(e) => handleFilterChange('name', e.target.value)}
         />
       </StyledSelect>
       <StyledSelect>
@@ -140,10 +138,8 @@ export const Filters = () => {
           name="type"
           id="search-type"
           placeholder="Type"
-          value={type}
-          onChange={(e) => {
-            setType(e.target.value);
-          }}
+          value={filters.type}
+          onChange={(e) => handleFilterChange('type', e.target.value)}
         />
       </StyledSelect>
       <StyledSelect>
@@ -246,5 +242,9 @@ const StyledSelect = styled.div`
       flex-direction: column;
       gap: 10px;
     }
+  }
+
+  option:hover {
+    background-color: #83bf4633;
   }
 `;
