@@ -9,8 +9,6 @@ export const getListOfCharactersByPage = async (pageNumber) => {
               status
               gender
               species
-              name
-              type
             }
           }
         }

@@ -12,20 +12,30 @@ export const getUniqueFilterValues = async (numberOfPages) => {
   try {
     const dataCharactersAll = await Promise.all(promises);
     const dataCharactersAllFlat = dataCharactersAll.flat();
+
     const uniqueFilters = {
-      status: [
-        ...new Set(dataCharactersAllFlat.map((item) => item.status))
-      ].sort(),
-      gender: [
-        ...new Set(dataCharactersAllFlat.map((item) => item.gender))
-      ].sort(),
-      species: [
-        ...new Set(dataCharactersAllFlat.map((item) => item.species))
-      ].sort(),
-      name: [...new Set(dataCharactersAllFlat.map((item) => item.name))].sort(),
-      type: [...new Set(dataCharactersAllFlat.map((item) => item.type))]
-        .map((value) => (value === '' ? 'Unknown' : value))
+      status: [...new Set(dataCharactersAllFlat.map((item) => item.status))]
         .sort()
+        .map((status) => ({
+          value: status.toLowerCase(),
+          label: status
+        })),
+      gender: [...new Set(dataCharactersAllFlat.map((item) => item.gender))]
+        .sort()
+        .map((gender) => ({
+          value: gender.toLowerCase(),
+          label: gender
+        })),
+      species: [...new Set(dataCharactersAllFlat.map((item) => item.species))]
+        .sort()
+        .map((species) => ({
+          value: species.toLowerCase(),
+          label: species
+        }))
+      // name: [...new Set(dataCharactersAllFlat.map((item) => item.name))].sort(),
+      // type: [...new Set(dataCharactersAllFlat.map((item) => item.type))]
+      //   .map((value) => (value === '' ? 'Unknown' : value))
+      //   .sort()
     };
 
     return uniqueFilters;
