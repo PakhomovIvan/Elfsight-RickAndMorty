@@ -18,7 +18,13 @@ export function DataProvider({ children }) {
   const [isFetching, setIsFetching] = useState(false);
   const [isError, setIsError] = useState(false);
   const [info, setInfo] = useState({});
-  const [apiURL, setApiURL] = useState(API_URL);
+  const [apiURL, setApiURL] = useState(() => {
+    const url = new URL(API_URL);
+    const params = new URLSearchParams(window.location.search);
+    url.search = params.toString();
+
+    return url.toString();
+  });
   const [allFilters, setAllFilters] = useState({
     status: [],
     gender: [],

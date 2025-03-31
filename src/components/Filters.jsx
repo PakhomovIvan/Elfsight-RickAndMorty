@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useData } from './providers';
@@ -14,6 +14,7 @@ export const Filters = () => {
     name: searchParams.get('name') || '',
     type: searchParams.get('type') || ''
   });
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     if (
@@ -32,7 +33,7 @@ export const Filters = () => {
     }));
   };
 
-  const handleApply = () => {
+  const handleApply = useCallback(() => {
     const params = {};
     Object.entries(filters).forEach(([key, value]) => {
       if (value) params[key] = value;
@@ -52,7 +53,14 @@ export const Filters = () => {
     });
 
     setActivePage(0);
-  };
+  }, [filters, setSearchParams, setApiURL, setActivePage]);
+
+  useEffect(() => {
+    if (isFirstRender.current && searchParams.toString()) {
+      handleApply();
+      isFirstRender.current = false;
+    }
+  }, [searchParams, handleApply]);
 
   const handleReset = () => {
     setFilters({
