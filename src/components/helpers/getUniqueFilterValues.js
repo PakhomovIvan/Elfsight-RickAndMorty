@@ -31,10 +31,6 @@ export const getUniqueFilterValues = async (numberOfPages) => {
           value: species.toLowerCase(),
           label: species
         }))
-      // name: [...new Set(dataCharactersAllFlat.map((item) => item.name))].sort(),
-      // type: [...new Set(dataCharactersAllFlat.map((item) => item.type))]
-      //   .map((value) => (value === '' ? 'Unknown' : value))
-      //   .sort()
     };
 
     return uniqueFilters;
