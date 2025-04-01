@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.869ee58a.css",
-    "main.js": "/static/js/main.20793b5f.js",
-    "static/media/green-portal.png": "/static/media/green-portal.a218ca229093de6f08d2.png",
-    "static/media/widget-logo.png": "/static/media/widget-logo.42c8df0b92603ef2e2e2.png",
-    "static/media/male.svg": "/static/media/male.42d01c2c5e1d7025a594642a761f1939.svg",
-    "index.html": "/index.html",
-    "static/media/genderless.svg": "/static/media/genderless.dec799ed2f3cfbb46522c185f9dbb030.svg",
-    "static/media/female.svg": "/static/media/female.02f202d68bdd63c12690625cf6aec3fd.svg",
-    "main.869ee58a.css.map": "/static/css/main.869ee58a.css.map",
-    "main.20793b5f.js.map": "/static/js/main.20793b5f.js.map"
+    "main.css": "/Elfsight-RickAndMorty/static/css/main.869ee58a.css",
+    "main.js": "/Elfsight-RickAndMorty/static/js/main.93e90a5d.js",
+    "static/media/green-portal.png": "/Elfsight-RickAndMorty/static/media/green-portal.a218ca229093de6f08d2.png",
+    "static/media/widget-logo.png": "/Elfsight-RickAndMorty/static/media/widget-logo.42c8df0b92603ef2e2e2.png",
+    "static/media/male.svg": "/Elfsight-RickAndMorty/static/media/male.42d01c2c5e1d7025a594642a761f1939.svg",
+    "index.html": "/Elfsight-RickAndMorty/index.html",
+    "static/media/genderless.svg": "/Elfsight-RickAndMorty/static/media/genderless.dec799ed2f3cfbb46522c185f9dbb030.svg",
+    "static/media/female.svg": "/Elfsight-RickAndMorty/static/media/female.02f202d68bdd63c12690625cf6aec3fd.svg",
+    "main.869ee58a.css.map": "/Elfsight-RickAndMorty/static/css/main.869ee58a.css.map",
+    "main.93e90a5d.js.map": "/Elfsight-RickAndMorty/static/js/main.93e90a5d.js.map"
   },
   "entrypoints": [
     "static/css/main.869ee58a.css",
-    "static/js/main.20793b5f.js"
+    "static/js/main.93e90a5d.js"
   ]
 }
